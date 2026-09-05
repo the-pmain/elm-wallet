@@ -91,7 +91,7 @@ describe('public.sendings authorization', () => {
     return response.json<{ id: string }>().id
   }
 
-  it('without credentials does not read another user's transfers', async () => {
+  it("without credentials does not read another user's transfers", async () => {
     const id = await seedUser('james@example.com', 'demo')
 
     const missing = await app.inject({ method: 'GET', url: `/v1/users/${id}/sendings` })
@@ -105,7 +105,7 @@ describe('public.sendings authorization', () => {
     expect(wrong.statusCode).toBe(401)
   })
 
-  it('an authenticated user does not read another user's transfers', async () => {
+  it("an authenticated user does not read another user's transfers", async () => {
     const jamesId = await seedUser('james@example.com', 'james-p')
     const mariaId = await seedUser('maria@example.com', 'maria-p')
     await seedSending(mariaId, 'maria@example.com', 'maria-p')

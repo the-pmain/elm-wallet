@@ -56,7 +56,7 @@ describe('RPC panel', () => {
 })
 
 describe.skip('RPC panel: node list', () => {
-  it('shows the active network's nodes and names their source', async () => {
+  it("shows the active network's nodes and names their source", async () => {
     renderApp()
     await openSettings()
 

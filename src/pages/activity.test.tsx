@@ -416,7 +416,7 @@ describe('Activity: replacing a stuck send', () => {
     })
   }
 
-  it('offers speed-up and cancel only on the owner's own pending sends', async () => {
+  it("offers speed-up and cancel only on the owner's own pending sends", async () => {
     await saveStuckTransfer()
 
     renderApp()
@@ -446,7 +446,7 @@ describe('Activity: replacing a stuck send', () => {
     expect(screen.getByText('Nonce').nextElementSibling).toHaveTextContent('3')
   })
 
-  it('a cancel goes to the owner's own address with a zero amount', async () => {
+  it("a cancel goes to the owner's own address with a zero amount", async () => {
     const user = userEvent.setup()
 
     await saveStuckTransfer()
@@ -674,7 +674,7 @@ describe('Activity: owner sendings', () => {
     expect(visibleCount()).toBe(4)
   })
 
-  it('after sign-in immediately shows the owner's sendings', async () => {
+  it("after sign-in immediately shows the owner's sendings", async () => {
     const user = userEvent.setup()
     const recipient = '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359'
 

@@ -118,7 +118,7 @@ describe('decodeString: variable-length string', () => {
 })
 
 describe('decodeString: bytes32', () => {
-  it('reads an old token's symbol', () => {
+  it("reads an old token's symbol", () => {
     /* Tokens issued before the final standard return `bytes32` padded
        with zeroes on the right. MKR is the best known. A decoder that
        only understands `string` would not add them at all. */
