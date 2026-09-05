@@ -1,0 +1,202 @@
+import type { Plugin } from 'vite'
+
+import { buildContentSecurityPolicy } from './csp-plugin'
+
+/**
+ * Security headers for hosting.
+ *
+ * WHY THESE IF THERE IS A META TAG. The meta tag does not support
+ * `frame-ancestors` or `report-*`: it cannot stop the wallet being
+ * framed on a foreign page. A wallet page in an invisible frame over
+ * another page is a signature the owner made while aiming at another
+ * button.
+ *
+ * HEADERS ARE GENERATED FROM THE SAME SOURCE AS THE META TAG. Two
+ * hand-written directive lists diverge on the first change, and the
+ * divergence is silent: the build passes, tests pass, and the live
+ * policy is weaker than the declared one.
+ */
+
+/**
+ * Browser permissions.
+ *
+ * CAMERA AND HID ARE NEEDED FOR REAL WORK, not "just in case": the
+ * first reads a connect link from a barcode, the second talks to a
+ * hardware wallet. A host that left defaults would silently disable
+ * both — they would simply stop working with no message.
+ *
+ * Everything else is closed explicitly: listing only what is needed
+ * is safer than relying on browser defaults that change by version.
+ */
+const PERMISSIONS_POLICY = [
+  'camera=(self)',
+  'hid=(self)',
+  'accelerometer=()',
+  'autoplay=()',
+  'bluetooth=()',
+  'display-capture=()',
+  'geolocation=()',
+  'gyroscope=()',
+  'magnetometer=()',
+  'microphone=()',
+  'midi=()',
+  'payment=()',
+  'serial=()',
+  'usb=()',
+  'xr-spatial-tracking=()',
+].join(', ')
+
+/**
+ * Value of `X-Robots-Tag` and the `robots` meta tag.
+ *
+ * ONE STRING ON EVERY SURFACE. The host header, Vite (dev and
+ * preview), and the meta tag in `index.html` must say the same
+ * thing: otherwise a robot that arrived by one path gets a
+ * permission the other path does not grant.
+ */
+export const ROBOTS_TAG_VALUE =
+  'noindex, nofollow, noarchive, nosnippet, noimageindex'
+
+export interface ISecurityHeader {
+  readonly name: string
+  readonly value: string
+}
+
+/**
+ * Headers required to host the wallet.
+ *
+ * @param connectSrc Connect sources. Default matches the meta tag.
+ */
+export function buildSecurityHeaders(connectSrc?: string): readonly ISecurityHeader[] {
+  return [
+    {
+      name: 'Content-Security-Policy',
+      /* `frame-ancestors` is added only here: the meta tag ignores
+         that directive, and declaring it there would fake a defense. */
+      value: `${buildContentSecurityPolicy(connectSrc)}; frame-ancestors 'none'`,
+    },
+    /* Duplicates `frame-ancestors` for browsers that do not know it.
+       One line. */
+    { name: 'X-Frame-Options', value: 'DENY' },
+    { name: 'X-Content-Type-Options', value: 'nosniff' },
+    /*
+      The wallet is a client, not a public site. The `robots` meta tag
+      is seen only by those who loaded HTML. The header also covers
+      responses without markup: JSON API, scripts, icons. `noarchive`
+      / `nosnippet` keep a search engine from holding a page copy if
+      the URL still lands in the index via an inbound link.
+    */
+    { name: 'X-Robots-Tag', value: ROBOTS_TAG_VALUE },
+    /*
+      No wallet address should leave in a Referer to a foreign server.
+      The location bar holds a route, and our routes hold no addresses
+      — but that must not be treated as a permanent property.
+    */
+    { name: 'Referrer-Policy', value: 'no-referrer' },
+    /*
+      Two years and subdomains: intercepting the first HTTP request
+      can swap the whole page, and the page is the wallet. `preload`
+      puts the domain on the browser list — protected from the first
+      visit.
+    */
+    {
+      name: 'Strict-Transport-Security',
+      value: 'max-age=63072000; includeSubDomains; preload',
+    },
+    { name: 'Permissions-Policy', value: PERMISSIONS_POLICY },
+    /* A window the wallet opened, or that opened it, does not get a
+       handle to its context. */
+    { name: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+    { name: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
+  ]
+}
+
+/**
+ * Cache rules.
+ *
+ * BUILD FILES ARE IMMUTABLE; THE ENTRY IS NOT. Names in `assets`
+ * include a content hash, so they can be cached forever. `index.html`
+ * does not change name: if the browser kept it long, the user would
+ * stay on the previous build — including one with a fixed hole.
+ */
+const CACHE_RULES: readonly { readonly path: string; readonly value: string }[] = [
+  { path: '/assets/*', value: 'public, max-age=31536000, immutable' },
+  { path: '/index.html', value: 'no-cache' },
+  { path: '/', value: 'no-cache' },
+]
+
+export function buildNetlifyHeaders(connectSrc?: string): string {
+  const lines = ['/*']
+
+  for (const header of buildSecurityHeaders(connectSrc)) {
+    lines.push(`  ${header.name}: ${header.value}`)
+  }
+
+  for (const rule of CACHE_RULES) {
+    lines.push('', rule.path, `  Cache-Control: ${rule.value}`)
+  }
+
+  return `${lines.join('\n')}\n`
+}
+
+export function buildNginxSnippet(connectSrc?: string): string {
+  const lines = [
+    '# Security headers for ETWallet.',
+    '#',
+    '# This file is generated by the build from the same source as the',
+    '# policy meta tag: do not edit it by hand — the next build will',
+    '# overwrite the change.',
+    '#',
+    '# Wire-up: include this file inside the server block.',
+    '',
+  ]
+
+  for (const header of buildSecurityHeaders(connectSrc)) {
+    /* `always` is required: without it the header is omitted on
+       error responses, and an error page is still a page. */
+    lines.push(`add_header ${header.name} "${header.value}" always;`)
+  }
+
+  lines.push(
+    '',
+    'location /assets/ {',
+    '  add_header Cache-Control "public, max-age=31536000, immutable" always;',
+    '}',
+    '',
+    'location = /index.html {',
+    '  add_header Cache-Control "no-cache" always;',
+    '}',
+  )
+
+  return `${lines.join('\n')}\n`
+}
+
+/**
+ * Writes host config files next to the build.
+ *
+ * Files land in `dist`, not the repository: they are derived from
+ * the policy and must change with it. A repo file would have to be
+ * updated by hand and would silently drift from the live policy.
+ */
+export function securityHeadersPlugin(): Plugin {
+  return {
+    name: 'wallet:security-headers',
+    apply: 'build',
+    generateBundle() {
+      const configured = process.env['VITE_CSP_CONNECT_SRC']?.trim()
+      const connectSrc = configured === undefined || configured === '' ? undefined : configured
+
+      this.emitFile({
+        type: 'asset',
+        fileName: '_headers',
+        source: buildNetlifyHeaders(connectSrc),
+      })
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'deploy/nginx-security.conf',
+        source: buildNginxSnippet(connectSrc),
+      })
+    },
+  }
+}

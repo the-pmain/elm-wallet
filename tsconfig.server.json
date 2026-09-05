@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.server.tsbuildinfo",
+
+    /* Target environment: Node 22 LTS and newer. Not the browser. */
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    /* Imports use the `.ts` extension: Node runs the same source
+       directly, stripping types. A separate `dist` build is not needed. */
+    "allowImportingTsExtensions": true,
+
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Dependency type declarations are not checked: they belong to
+       other people's code, and a version mismatch between @types/node
+       and Fastify's internals would stop the check without ever
+       pointing at an error in ours. */
+    "skipLibCheck": true,
+
+    /* Constructs that need codegen are banned: Node 22 and newer
+       runs TypeScript by stripping types, and enum or namespace
+       cannot be handled that way. */
+    "erasableSyntaxOnly": true,
+
+    "types": ["node"]
+  },
+  "include": ["server/src"]
+}

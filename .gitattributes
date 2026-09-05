@@ -1,0 +1,13 @@
+# Line endings in the repository are always LF.
+#
+# Without this rule Windows writes CRLF, and any file touched
+# on another system shows as entirely changed: reviewing edits
+# becomes impossible. This value is consistent with `.editorconfig`
+# and with the Prettier setting.
+* text=auto eol=lf
+
+# Binary files are not normalized: newlines in them are data.
+*.png binary
+*.woff2 binary
+*.ico binary
+*.zip binary

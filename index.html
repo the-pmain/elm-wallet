@@ -1,0 +1,79 @@
+<!doctype html>
+<!--
+  PAGE LANGUAGE MATCHES THE INTERFACE LANGUAGE.
+
+  It used to be `ru` while the whole UI is English — that choice is
+  explained in the dictionary: the wallet speaks the language of
+  standards, network names, and node messages. The mismatch made a
+  screen reader speak English text by Russian pronunciation rules,
+  and the browser offered to translate a page that needs none.
+-->
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Referrer policy: do not send the app URL to third-party resources.
+      For a wallet that cuts context leaks (for example an address in the path).
+    -->
+    <meta name="referrer" content="no-referrer" />
+
+    <!--
+      The app must not be indexed, followed, or cached by search engines.
+      The meta tag is seen by robots that loaded the HTML; the
+      X-Robots-Tag header and robots.txt cover the rest.
+    -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+
+    <!--
+      Icons are prepared by `npm run icons` from `public/icon.png`.
+      The source is about 1.4 MB and unfit as a tab icon: the browser
+      would download it whole for 16 pixels.
+    -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+
+    <!--
+      Metadata for the tab, bookmarks, and link previews.
+      `noindex` above is kept: the wallet is not meant for search
+      results, but the description helps when sharing and in the tab list.
+    -->
+    <title>ET WALLET — Non-Custodial Crypto Wallet | Your Keys, Your Crypto</title>
+    <meta
+      name="description"
+      content="ET WALLET is a secure non-custodial cryptocurrency wallet. Private keys stay encrypted on your device. Send, receive, and manage digital assets across multiple blockchains."
+    />
+    <meta
+      name="keywords"
+      content="crypto wallet, non-custodial wallet, self-custody, ethereum wallet, web3 wallet, DeFi, send crypto, receive crypto"
+    />
+    <meta name="application-name" content="ET WALLET" />
+    <meta name="apple-mobile-web-app-title" content="ET WALLET" />
+    <meta name="theme-color" content="#16141c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fcfbfe" media="(prefers-color-scheme: light)" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ET WALLET" />
+    <meta property="og:title" content="ET WALLET — Non-Custodial Crypto Wallet" />
+    <meta
+      property="og:description"
+      content="Your keys stay yours. ET WALLET keeps private keys encrypted on your device — send, receive, and manage crypto securely."
+    />
+    <meta property="og:image" content="/icons/icon-192.png" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ET WALLET — Non-Custodial Crypto Wallet" />
+    <meta
+      name="twitter:description"
+      content="Your keys stay yours. ET WALLET keeps private keys encrypted on your device — send, receive, and manage crypto securely."
+    />
+    <meta name="twitter:image" content="/icons/icon-192.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>
