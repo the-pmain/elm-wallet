@@ -8,6 +8,9 @@ export interface ThemeContextValue {
   /** Theme actually applied after resolving `system`. */
   readonly resolvedTheme: 'light' | 'dark'
   setTheme: (theme: Theme) => void
+  /** Main accent as `#RRGGBB`. Drives primary, nav, and brand tints. */
+  readonly accentHex: string
+  setAccentHex: (hex: string) => void
 }
 
 /**

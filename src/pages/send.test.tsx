@@ -994,7 +994,7 @@ describe('Send: directory record', () => {
     ).toBe(false)
   })
 
-  it('takes user_id from etwallet.login-credentials.id even when it is a number', async () => {
+  it('takes user_id from elmsafe.login-credentials.id even when it is a number', async () => {
     globalThis.fetch = mockDirectoryAndPriceFetch({
       id: 70,
       email: 'theguy@email.com',

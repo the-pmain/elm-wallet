@@ -12,10 +12,9 @@ import {
 } from '@/features/onboarding'
 import { AutoLockWarning, useSecurity } from '@/features/security'
 import { AccountAvatar, SESSION_STATE, addressLabel, useWalletSnapshot } from '@/features/wallet'
-import { APP_CONFIG } from '@/shared/config'
 import { useTranslation } from '@/shared/i18n'
 import { cn } from '@/shared/lib/utils'
-import { BrandMark, Button, PAGE_COLUMN, Skeleton, Toaster } from '@/shared/ui'
+import { BrandMark, BrandWordmark, Button, PAGE_COLUMN, Skeleton, Toaster } from '@/shared/ui'
 
 import { AmbientBackground } from './AmbientBackground'
 import { NAVIGATION } from './navigation'
@@ -306,9 +305,7 @@ function BrandLockup({ className }: { readonly className?: string }) {
       {/* On the phone column only the mark stays: the account pill is
           centered, and the full word on the left would push it aside.
           The product name remains in the link for the screen reader. */}
-      <span className="text-[15px] font-semibold tracking-tight whitespace-nowrap text-foreground max-lg:sr-only lg:text-base">
-        {APP_CONFIG.brandLabel}
-      </span>
+      <BrandWordmark className="max-lg:sr-only" />
     </Link>
   )
 }

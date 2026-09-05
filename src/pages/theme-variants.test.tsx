@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { AppProviders } from '@/app/providers'
 import { AppRouter } from '@/app/router'
+import { APP_CONFIG } from '@/shared/config'
 import { createTestAppServices, type ITestAppServices } from '@/test/doubles'
 
 let services: ITestAppServices
@@ -45,7 +46,7 @@ describe('Home-screen theme studies', () => {
 
     expect(await screen.findByRole('heading', { name: '$4,280.50' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Recent sendings' })).toBeInTheDocument()
-    expect(screen.getAllByText('ET WALLET').length).toBeGreaterThan(0)
+    expect(screen.getAllByText(APP_CONFIG.brandLabel).length).toBeGreaterThan(0)
   })
 
   it('switches studies and leaves mock buttons inert', async () => {

@@ -16,6 +16,7 @@
   only Latin and Cyrillic, not the whole of Unicode.
 */
 @import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/rubik/wght.css';
 
 /*
   Dark theme is toggled by the `dark` class on the root element.
@@ -30,17 +31,27 @@
   changing lightness does not skew hue — important for generating
   hover/active states and for WCAG contrast control.
 
-  A THREE-COLOUR PALETTE. The primary is a deep purple, plus a
-  neutral scale and red for irreversible actions. The limit is not
-  aesthetic: in a wallet colour carries meaning (dangerous / safe /
-  neutral), and a fourth hue inevitably starts competing with
+  A THREE-COLOUR PALETTE. The primary is the user's main colour,
+  plus a neutral scale and red for irreversible actions. The limit
+  is not aesthetic: in a wallet colour carries meaning (dangerous /
+  safe / neutral), and a fourth hue inevitably starts competing with
   warnings for attention.
 
-  THE PRIMARY IS DELIBERATELY DARK. A light purple on a light
+  THE PRIMARY IS DELIBERATELY DARK ENOUGH. A washed fill on a light
   background gives contrast below 4.5:1 — the WCAG AA threshold for
   text. A "Send" button that is hard to see is not a matter of taste.
+
+  HUE AND CHROMA LIVE IN VARIABLES. Settings writes `--brand-*` on
+  the root. Defaults here are graphite so the first paint is not the
+  old purple before React applies the stored choice.
 */
 :root {
+  --brand-hue: 275;
+  --brand-chroma: 0.01;
+  --brand-primary-l: 0.32;
+  --brand-emphasis-l: 0.32;
+  --brand-fg-l: 0.99;
+
   /*
     Radius increased from 0.75rem: the old corners advertised an
     origin in a settings table, not an app opened every day. Larger
@@ -50,35 +61,31 @@
   --radius: 0.875rem;
 
   /*
-    One family for the whole interface.
+    Inter for the interface. Rubik only for the wordmark.
 
-    A separate "display" font from the spec was rejected: it is paid
-    and distributed through a middleman with a dubious licence, and
-    the difference in heading cut is not worth the legal risk.
-    Distinction between heading and body is achieved with weight and
-    letter-spacing — a device that works in any family.
-
-    A system fallback if the font file failed to load: the wallet
-    must stay readable in any network state.
+    MetaMask's lockup is a rounded geometric sans — friendly, open
+    counters, not a poster face. Rubik is the same family of cut:
+    readable at header size, more character than Inter, SIL OFL
+    from npm so it stays inside `font-src 'self'`.
   */
   --font-body:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: var(--font-body);
+  --font-display:
+    'Rubik Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 
-  --background: oklch(0.99 0.004 293);
-  --foreground: oklch(0.17 0.015 293);
+  --background: oklch(0.99 calc(var(--brand-chroma) * 0.017) var(--brand-hue));
+  --foreground: oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue));
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.17 0.015 293);
+  --card-foreground: oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue));
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.17 0.015 293);
+  --popover-foreground: oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue));
 
-  /* Purple, lightness 0.5: contrast with white text around 7:1. */
-  --primary: oklch(0.5 0.23 293);
-  --primary-foreground: oklch(0.99 0.005 293);
+  --primary: oklch(var(--brand-primary-l) var(--brand-chroma) var(--brand-hue));
+  --primary-foreground: oklch(var(--brand-fg-l) calc(var(--brand-chroma) * 0.02) var(--brand-hue));
 
   /*
-    The same purple in the TEXT role on the page background.
+    The same main colour in the TEXT role on the page background.
 
     A separate token is needed because one value cannot serve both
     roles at once: a colour that contrasts enough with white text on
@@ -89,21 +96,21 @@
 
     In the light theme the roles coincide and the values are equal.
   */
-  --primary-emphasis: oklch(0.5 0.23 293);
+  --primary-emphasis: oklch(var(--brand-emphasis-l) var(--brand-chroma) var(--brand-hue));
 
-  --secondary: oklch(0.96 0.012 293);
-  --secondary-foreground: oklch(0.26 0.05 293);
-  --muted: oklch(0.96 0.008 293);
-  --muted-foreground: oklch(0.51 0.02 293);
-  --accent: oklch(0.95 0.02 293);
-  --accent-foreground: oklch(0.3 0.09 293);
+  --secondary: oklch(0.96 calc(var(--brand-chroma) * 0.052) var(--brand-hue));
+  --secondary-foreground: oklch(0.26 calc(var(--brand-chroma) * 0.22) var(--brand-hue));
+  --muted: oklch(0.96 calc(var(--brand-chroma) * 0.035) var(--brand-hue));
+  --muted-foreground: oklch(0.51 calc(var(--brand-chroma) * 0.087) var(--brand-hue));
+  --accent: oklch(0.95 calc(var(--brand-chroma) * 0.087) var(--brand-hue));
+  --accent-foreground: oklch(0.3 calc(var(--brand-chroma) * 0.39) var(--brand-hue));
 
   --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.9 0.012 293);
-  --input: oklch(0.9 0.012 293);
-  --ring: oklch(0.5 0.23 293);
+  --border: oklch(0.9 calc(var(--brand-chroma) * 0.052) var(--brand-hue));
+  --input: oklch(0.9 calc(var(--brand-chroma) * 0.052) var(--brand-hue));
+  --ring: oklch(var(--brand-primary-l) var(--brand-chroma) var(--brand-hue));
 
   /* Semantic risk-level colours. Used by phishing and suspicious-
      transaction warning screens. Set here, not in components, so
@@ -126,7 +133,7 @@
     beside it. Colour here is an auxiliary cue, not the carrier of
     meaning.
   */
-  --chart-1: oklch(0.58 0.24 293);
+  --chart-1: oklch(0.58 var(--brand-chroma) var(--brand-hue));
   --chart-2: oklch(0.66 0.15 195);
   --chart-3: oklch(0.7 0.16 70);
   --chart-4: oklch(0.62 0.17 150);
@@ -136,9 +143,18 @@
   --chart-8: oklch(0.72 0.14 110);
 
   /* Brand-block gradient. The second colour is the same hue, shifted
-     toward blue: two neighbouring tones read as one material, not a
-     rainbow, and do not add a fourth meaning to the palette. */
-  --brand-gradient: linear-gradient(135deg, oklch(0.52 0.24 296), oklch(0.42 0.19 268));
+     toward a neighbour: two neighbouring tones read as one material,
+     not a rainbow, and do not add a fourth meaning to the palette. */
+  --brand-gradient: linear-gradient(
+    135deg,
+    oklch(
+      calc(var(--brand-primary-l) + 0.02) calc(var(--brand-chroma) * 1.04) var(--brand-hue)
+    ),
+    oklch(
+      calc(var(--brand-primary-l) - 0.08) calc(var(--brand-chroma) * 0.83)
+        calc(var(--brand-hue) - 25)
+    )
+  );
 
   /*
     DEPTH SCALE. Two steps, no more.
@@ -153,12 +169,14 @@
     mean two "most important" objects — and that is no longer
     hierarchy.
 
-    Shadows are tinted purple, not black: a grey shadow under a
-    coloured card looks like dirt, and a shadow of the same family
-    reads as light falling on the material.
+    Shadows are tinted with the main colour, not a fixed grey: a
+    grey shadow under a coloured card looks like dirt, and a shadow
+    of the same family reads as light falling on the material.
   */
-  --elevation-surface: 0 1px 2px oklch(0.17 0.015 293 / 6%), 0 4px 14px oklch(0.17 0.015 293 / 5%);
-  --elevation-raised: 0 2px 4px oklch(0.17 0.015 293 / 7%), 0 14px 36px oklch(0.4 0.16 293 / 12%);
+  --elevation-surface: 0 1px 2px oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue) / 6%),
+    0 4px 14px oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue) / 5%);
+  --elevation-raised: 0 2px 4px oklch(0.17 calc(var(--brand-chroma) * 0.065) var(--brand-hue) / 7%),
+    0 14px 36px oklch(0.4 calc(var(--brand-chroma) * 0.7) var(--brand-hue) / 12%);
 
   /*
     Hairline along the top edge of a raised surface.
@@ -177,7 +195,11 @@
     under the sum would lower the figures' contrast — and the sum is
     what is read.
   */
-  --hero-gradient: linear-gradient(157deg, oklch(0.97 0.035 296), oklch(0.99 0.012 268));
+  --hero-gradient: linear-gradient(
+    157deg,
+    oklch(0.97 calc(var(--brand-chroma) * 0.15) var(--brand-hue)),
+    oklch(0.99 calc(var(--brand-chroma) * 0.052) calc(var(--brand-hue) - 25))
+  );
 
   /*
     Density of the background gradient blobs.
@@ -206,7 +228,7 @@
     Gradient-blob colours, per theme.
 
     WHY NOT ONE SET FOR BOTH. A blob lighter than the background
-    reads as a glow, darker as a dirty stain. A mid-lightness purple
+    reads as a glow, darker as a dirty stain. A mid-lightness accent
     on a dark background is lighter than it and looks like lighting;
     on white it is darker and turns into a grey blot. That used to
     be fixed by cutting opacity by a factor of three, which made the
@@ -218,47 +240,53 @@
     are opaque, so this does not affect text readability — colour
     is visible only in the margins.
   */
-  --aurora-blob-1-from: oklch(0.82 0.14 296 / 60%);
-  --aurora-blob-1-to: oklch(0.82 0.14 296 / 0%);
-  --aurora-blob-2-from: oklch(0.84 0.12 268 / 55%);
-  --aurora-blob-2-to: oklch(0.84 0.12 268 / 0%);
-  --aurora-blob-3-from: oklch(0.86 0.11 320 / 45%);
-  --aurora-blob-3-to: oklch(0.86 0.11 320 / 0%);
+  --aurora-blob-1-from: oklch(0.82 calc(var(--brand-chroma) * 0.61) var(--brand-hue) / 60%);
+  --aurora-blob-1-to: oklch(0.82 calc(var(--brand-chroma) * 0.61) var(--brand-hue) / 0%);
+  --aurora-blob-2-from: oklch(
+    0.84 calc(var(--brand-chroma) * 0.52) calc(var(--brand-hue) - 25) / 55%
+  );
+  --aurora-blob-2-to: oklch(0.84 calc(var(--brand-chroma) * 0.52) calc(var(--brand-hue) - 25) / 0%);
+  --aurora-blob-3-from: oklch(
+    0.86 calc(var(--brand-chroma) * 0.48) calc(var(--brand-hue) + 27) / 45%
+  );
+  --aurora-blob-3-to: oklch(0.86 calc(var(--brand-chroma) * 0.48) calc(var(--brand-hue) + 27) / 0%);
 }
 
 .dark {
-  /* Background is not black but purple-tinted: pure black next to
-     coloured elements produces an edge halo on OLED screens. */
-  --background: oklch(0.16 0.018 292);
-  --foreground: oklch(0.97 0.005 293);
+  --brand-primary-l: 0.34;
+  --brand-emphasis-l: 0.82;
+  --brand-fg-l: 0.99;
 
-  --card: oklch(0.21 0.022 292);
-  --card-foreground: oklch(0.97 0.005 293);
-  --popover: oklch(0.21 0.022 292);
-  --popover-foreground: oklch(0.97 0.005 293);
+  /* Background is not pure black: a hard black next to coloured
+     elements produces an edge halo on OLED screens. The tint follows
+     the main colour — graphite stays near-neutral. */
+  --background: oklch(0.16 calc(var(--brand-chroma) * 0.078) var(--brand-hue));
+  --foreground: oklch(0.97 calc(var(--brand-chroma) * 0.022) var(--brand-hue));
 
-  /* On a dark background lightness is raised to 0.58 — otherwise
-     contrast falls below the threshold. The colour stays saturated,
-     not pastel. */
-  --primary: oklch(0.58 0.24 293);
-  --primary-foreground: oklch(0.99 0.005 293);
+  --card: oklch(0.21 calc(var(--brand-chroma) * 0.096) var(--brand-hue));
+  --card-foreground: oklch(0.97 calc(var(--brand-chroma) * 0.022) var(--brand-hue));
+  --popover: oklch(0.21 calc(var(--brand-chroma) * 0.096) var(--brand-hue));
+  --popover-foreground: oklch(0.97 calc(var(--brand-chroma) * 0.022) var(--brand-hue));
+
+  --primary: oklch(var(--brand-primary-l) var(--brand-chroma) var(--brand-hue));
+  --primary-foreground: oklch(var(--brand-fg-l) calc(var(--brand-chroma) * 0.02) var(--brand-hue));
 
   /* Lighter than the fill: on a dark background it reads as text. */
-  --primary-emphasis: oklch(0.75 0.17 293);
+  --primary-emphasis: oklch(var(--brand-emphasis-l) var(--brand-chroma) var(--brand-hue));
 
-  --secondary: oklch(0.27 0.03 292);
-  --secondary-foreground: oklch(0.97 0.005 293);
-  --muted: oklch(0.26 0.025 292);
-  --muted-foreground: oklch(0.72 0.02 293);
-  --accent: oklch(0.3 0.05 293);
-  --accent-foreground: oklch(0.97 0.005 293);
+  --secondary: oklch(0.27 calc(var(--brand-chroma) * 0.13) var(--brand-hue));
+  --secondary-foreground: oklch(0.97 calc(var(--brand-chroma) * 0.022) var(--brand-hue));
+  --muted: oklch(0.26 calc(var(--brand-chroma) * 0.11) var(--brand-hue));
+  --muted-foreground: oklch(0.72 calc(var(--brand-chroma) * 0.087) var(--brand-hue));
+  --accent: oklch(0.3 calc(var(--brand-chroma) * 0.22) var(--brand-hue));
+  --accent-foreground: oklch(0.97 calc(var(--brand-chroma) * 0.022) var(--brand-hue));
 
   --destructive: oklch(0.68 0.19 24);
   --destructive-foreground: oklch(0.99 0 0);
 
   --border: oklch(1 0 0 / 9%);
   --input: oklch(1 0 0 / 13%);
-  --ring: oklch(0.62 0.22 293);
+  --ring: oklch(var(--brand-primary-l) var(--brand-chroma) var(--brand-hue));
 
   --risk-low: oklch(0.72 0.16 150);
   --risk-medium: oklch(0.8 0.15 70);
@@ -266,7 +294,7 @@
 
   /* On a dark background lightness is raised: the same hues, but
      distinguishable on top of a dark card. */
-  --chart-1: oklch(0.7 0.19 293);
+  --chart-1: oklch(0.7 var(--brand-chroma) var(--brand-hue));
   --chart-2: oklch(0.75 0.13 195);
   --chart-3: oklch(0.8 0.15 70);
   --chart-4: oklch(0.74 0.15 150);
@@ -275,7 +303,14 @@
   --chart-7: oklch(0.76 0.12 240);
   --chart-8: oklch(0.8 0.13 110);
 
-  --brand-gradient: linear-gradient(135deg, oklch(0.58 0.24 296), oklch(0.42 0.2 268));
+  --brand-gradient: linear-gradient(
+    135deg,
+    oklch(var(--brand-primary-l) calc(var(--brand-chroma) * 1.04) var(--brand-hue)),
+    oklch(
+      calc(var(--brand-primary-l) - 0.16) calc(var(--brand-chroma) * 0.87)
+        calc(var(--brand-hue) - 25)
+    )
+  );
 
   /*
     Shadows work differently on a dark background.
@@ -287,11 +322,16 @@
     from the background.
   */
   --elevation-surface: 0 1px 2px oklch(0 0 0 / 35%), 0 4px 14px oklch(0 0 0 / 22%);
-  --elevation-raised: 0 2px 6px oklch(0 0 0 / 45%), 0 18px 44px oklch(0.35 0.2 293 / 20%);
+  --elevation-raised: 0 2px 6px oklch(0 0 0 / 45%),
+    0 18px 44px oklch(0.35 calc(var(--brand-chroma) * 0.87) var(--brand-hue) / 20%);
 
   --surface-hairline: oklch(1 0 0 / 9%);
 
-  --hero-gradient: linear-gradient(157deg, oklch(0.28 0.055 296), oklch(0.21 0.028 272));
+  --hero-gradient: linear-gradient(
+    157deg,
+    oklch(0.28 calc(var(--brand-chroma) * 0.24) var(--brand-hue)),
+    oklch(0.21 calc(var(--brand-chroma) * 0.12) calc(var(--brand-hue) - 21))
+  );
 
   --aurora-opacity: 1;
 
@@ -302,12 +342,16 @@
 
   /* Mid-lightness hues: on a dark background they are lighter than
      it and read as lighting. See the light-theme note. */
-  --aurora-blob-1-from: oklch(0.55 0.22 296 / 45%);
-  --aurora-blob-1-to: oklch(0.55 0.22 296 / 0%);
-  --aurora-blob-2-from: oklch(0.5 0.2 268 / 40%);
-  --aurora-blob-2-to: oklch(0.5 0.2 268 / 0%);
-  --aurora-blob-3-from: oklch(0.6 0.19 320 / 28%);
-  --aurora-blob-3-to: oklch(0.6 0.19 320 / 0%);
+  --aurora-blob-1-from: oklch(0.55 calc(var(--brand-chroma) * 0.96) var(--brand-hue) / 45%);
+  --aurora-blob-1-to: oklch(0.55 calc(var(--brand-chroma) * 0.96) var(--brand-hue) / 0%);
+  --aurora-blob-2-from: oklch(
+    0.5 calc(var(--brand-chroma) * 0.87) calc(var(--brand-hue) - 25) / 40%
+  );
+  --aurora-blob-2-to: oklch(0.5 calc(var(--brand-chroma) * 0.87) calc(var(--brand-hue) - 25) / 0%);
+  --aurora-blob-3-from: oklch(
+    0.6 calc(var(--brand-chroma) * 0.83) calc(var(--brand-hue) + 27) / 28%
+  );
+  --aurora-blob-3-to: oklch(0.6 calc(var(--brand-chroma) * 0.83) calc(var(--brand-hue) + 27) / 0%);
 }
 
 @theme inline {
@@ -688,6 +732,15 @@
   }
 
   /*
+    Prepared icons are white on transparency. On the light theme
+    that would vanish, so the mark flips to near-black. Dark keeps
+    the file as painted — the favicon and the header match.
+  */
+  html:not(.dark) .brand-mark {
+    filter: invert(1);
+  }
+
+  /*
     Muted substrate under an icon.
 
     A frequently repeated combination: a circle in the primary tone
@@ -839,13 +892,13 @@
        same light direction on every coin reads as one scene. */
     background: radial-gradient(
       circle at 32% 28%,
-      oklch(0.88 0.09 296) 0%,
-      oklch(0.64 0.22 296) 45%,
-      oklch(0.44 0.18 272) 100%
+      oklch(0.88 calc(var(--brand-chroma) * 0.39) var(--brand-hue)) 0%,
+      oklch(0.64 calc(var(--brand-chroma) * 0.96) var(--brand-hue)) 45%,
+      oklch(0.44 calc(var(--brand-chroma) * 0.78) calc(var(--brand-hue) - 21)) 100%
     );
     box-shadow:
-      inset 0 0 0 1px oklch(0.92 0.07 296 / 40%),
-      0 2px 10px oklch(0.3 0.12 290 / 35%);
+      inset 0 0 0 1px oklch(0.92 calc(var(--brand-chroma) * 0.3) var(--brand-hue) / 40%),
+      0 2px 10px oklch(0.3 calc(var(--brand-chroma) * 0.52) var(--brand-hue) / 35%);
     animation-name: coin-fall;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
@@ -863,8 +916,16 @@
     position: absolute;
     inset: 0;
     background-image:
-      repeating-linear-gradient(to right, oklch(0.7 0.05 293 / 6%) 0 1px, transparent 1px 72px),
-      repeating-linear-gradient(to bottom, oklch(0.7 0.05 293 / 6%) 0 1px, transparent 1px 72px);
+      repeating-linear-gradient(
+        to right,
+        oklch(0.7 calc(var(--brand-chroma) * 0.22) var(--brand-hue) / 6%) 0 1px,
+        transparent 1px 72px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        oklch(0.7 calc(var(--brand-chroma) * 0.22) var(--brand-hue) / 6%) 0 1px,
+        transparent 1px 72px
+      );
     /* The vignette fades the grid toward the edges: an even lattice
        all the way to the edge looks like a layout error, not texture. */
     mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);

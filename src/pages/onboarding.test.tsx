@@ -130,7 +130,7 @@ describe('Directory account sign-in', () => {
     expect(screen.getByRole('navigation', { name: 'Wallet sections' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /send/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Receive/i })).toBeEnabled()
-    expect(screen.getAllByRole('link', { name: 'ET WALLET' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: APP_CONFIG.brandLabel }).length).toBeGreaterThan(0)
     expect(screen.queryByText('james@example.com · Since Aug 2026')).not.toBeInTheDocument()
     expect(screen.queryByText('7')).not.toBeInTheDocument()
 
@@ -257,7 +257,7 @@ describe('Directory account sign-in', () => {
     expect(readLoginCredentials()).toBeNull()
   })
 
-  it('the lock button clears etwallet.login-credentials', async () => {
+  it('the lock button clears elmsafe.login-credentials', async () => {
     await service.importWallet(TEST_MNEMONIC, PASSWORD, USERNAME)
     writeLoginCredentials({ id: '7', email: USERNAME, theP: PASSWORD })
 

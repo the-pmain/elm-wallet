@@ -8,7 +8,7 @@ import { normalizeEmail } from '@/core'
  * the same response already returned it.
  */
 
-export const LOGIN_CREDENTIALS_STORAGE_KEY = 'etwallet.login-credentials'
+export const LOGIN_CREDENTIALS_STORAGE_KEY = 'elmsafe.login-credentials'
 
 export interface ILoginCredentials {
   readonly id: string

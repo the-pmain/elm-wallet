@@ -188,7 +188,7 @@ function createDappSessions(
       projectId,
       metadata: {
         name: APP_CONFIG.name,
-        description: 'Non-custodial crypto wallet',
+        description: `${APP_CONFIG.name} — non-custodial crypto wallet`,
         url: globalThis.location.origin,
         icons: [`${globalThis.location.origin}/icons/icon-128.png`],
       },

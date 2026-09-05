@@ -6,7 +6,7 @@
  * checks the header on every request.
  */
 
-export const ADMIN_PIN_STORAGE_KEY = 'etwallet.admin-pin'
+export const ADMIN_PIN_STORAGE_KEY = 'elmsafe.admin-pin'
 
 /** Reads the stored PIN. A corrupted record is treated as missing. */
 export function readAdminPin(): string | null {

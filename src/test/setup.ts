@@ -140,6 +140,14 @@ afterEach(() => {
   TestEventSource.reset()
   appMarketCatalog.reset()
   appFiatRates.reset()
+  /* Brand tokens are written onto the document root. A leftover
+     accent from the previous test would tint the next one. */
+  document.documentElement.removeAttribute('data-accent')
+  document.documentElement.style.removeProperty('--brand-hue')
+  document.documentElement.style.removeProperty('--brand-chroma')
+  document.documentElement.style.removeProperty('--brand-primary-l')
+  document.documentElement.style.removeProperty('--brand-emphasis-l')
+  document.documentElement.style.removeProperty('--brand-fg-l')
   /* Otherwise the next test would open on `/wallet/nft` after a
      navigation in the previous one: `BrowserRouter` reads
      `pathname` on mount. */

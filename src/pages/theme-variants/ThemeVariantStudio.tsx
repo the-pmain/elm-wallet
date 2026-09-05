@@ -11,7 +11,7 @@ export type ThemeVariantId = 'metamask' | 'trust' | 'cabinet'
 const VARIANT_LINKS = [
   { to: '/variant-1', label: 'MetaMask' },
   { to: '/variant-2', label: 'Trust Wallet' },
-  { to: '/variant-3', label: 'ETWallet cabinet' },
+  { to: '/variant-3', label: 'ELM cabinet' },
 ] as const
 
 interface ThemeVariantStudioProps {

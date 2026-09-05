@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { type Wei } from '@/core'
 import { TEST_MNEMONIC } from '@/core/hdwallet/vectors'
+import { APP_CONFIG } from '@/shared/config'
 import { createTestAppServices, type ITestAppServices } from '@/test/doubles'
 import { openPath } from '@/test/open-path'
 
@@ -102,7 +103,7 @@ describe('Wallet navigation', () => {
        on every screen would flicker on navigation. */
     expect(screen.getByText('Account 1')).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Wallet sections' })).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: 'ET WALLET' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: APP_CONFIG.brandLabel }).length).toBeGreaterThan(0)
   })
 })
 

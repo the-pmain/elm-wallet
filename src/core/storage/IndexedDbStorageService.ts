@@ -18,7 +18,7 @@ import {
 } from './types'
 
 /** Default database name. */
-const DEFAULT_DATABASE_NAME = 'etwallet'
+const DEFAULT_DATABASE_NAME = 'elmsafe'
 
 /** Storage settings. */
 export interface IIndexedDbStorageOptions {

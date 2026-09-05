@@ -53,12 +53,41 @@ const SIZES = [16, 32, 48, 128, 192, 512]
  */
 const PADDING_RATIO = 0.08
 
+/**
+ * Keeps the mark's shape and paints every visible pixel white.
+ *
+ * The source is the old purple ribbon. Tab icons and the in-app
+ * mark must be white; hue-rotate on a purple file left a violet
+ * leftover in the favicon, which CSS cannot recolor.
+ */
+async function toWhite(input) {
+  const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({
+    resolveWithObject: true,
+  })
+
+  for (let index = 0; index < data.length; index += 4) {
+    if (data[index + 3] === 0) {
+      continue
+    }
+
+    data[index] = 255
+    data[index + 1] = 255
+    data[index + 2] = 255
+  }
+
+  return sharp(data, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .png()
+    .toBuffer()
+}
+
 async function main() {
   const source = await readFile(SOURCE)
 
   /* Transparent margins are trimmed once: doing it per size would
      decode the source six times. */
-  const trimmed = await sharp(source).trim({ threshold: 10 }).png().toBuffer()
+  const trimmed = await toWhite(await sharp(source).trim({ threshold: 10 }).png().toBuffer())
   const outputDirectory = resolve(ROOT, 'public/icons')
 
   await mkdir(outputDirectory, { recursive: true })

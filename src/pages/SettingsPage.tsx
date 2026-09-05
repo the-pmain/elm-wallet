@@ -26,7 +26,7 @@ import {
   type IAccountDiscoverySummary,
 } from '@/features/wallet'
 import { ROUTE } from '@/app/router/routes'
-import { useTheme, type Theme } from '@/shared/theme'
+import { AccentColorPicker, useTheme, type Theme } from '@/shared/theme'
 import {
   Alert,
   AlertDescription,
@@ -123,7 +123,7 @@ export function SettingsPage() {
         {/* No card title on purpose: the switcher label already names
             the section, and two titles in a row — "Appearance" over
             "Appearance" — read as a layout bug. */}
-        <CardContent>
+        <CardContent className="flex flex-col gap-5">
           {/* The same switcher as history filters and send speed. A
               custom button set here differed in height and selected
               look — three places that drifted in small ways. */}
@@ -133,6 +133,8 @@ export function SettingsPage() {
             value={theme}
             onChange={setTheme}
           />
+
+          <AccentColorPicker />
         </CardContent>
       </Card>
 

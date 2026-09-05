@@ -44,7 +44,7 @@ export type WalletBroadcastEvent = (typeof WALLET_BROADCAST)[keyof typeof WALLET
 export class WalletBroadcast {
   readonly #channel: BroadcastChannel | null
 
-  constructor(name = 'etwallet') {
+  constructor(name = 'elmsafe') {
     this.#channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel(name)
   }
 

@@ -322,6 +322,18 @@ export default tseslint.config(
     },
   },
 
+  /*
+    The main accent lives in localStorage on purpose: welcome and
+    unlock already paint with brand tokens, and those screens open
+    before the encrypted wallet store. The record is a hex colour.
+  */
+  {
+    files: ['src/shared/theme/accent-storage.ts'],
+    rules: {
+      'no-restricted-globals': 'off',
+    },
+  },
+
   /* Files outside the TypeScript type system: the ESLint config and
      build scripts. Rules that need type information do not apply —
      these files have no TypeScript project to take it from. */

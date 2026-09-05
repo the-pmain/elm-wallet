@@ -6,10 +6,10 @@
  * Vite (for example in an extension service worker).
  */
 export const APP_CONFIG = {
-  name: 'ETWallet',
+  name: 'ELM',
 
   /** Caption next to the mark in the header and sidebar. */
-  brandLabel: 'ET WALLET',
+  brandLabel: 'ELM',
 
   /** Version from package.json, injected at build time. */
   version: __APP_VERSION__,

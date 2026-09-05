@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { TEST_MODE } from '@/shared/config'
+import { APP_CONFIG, TEST_MODE } from '@/shared/config'
 import { createTestAppServices } from '@/test/doubles'
 
 import { App } from './App'
@@ -33,7 +33,7 @@ describe('App', () => {
     /* The tell is the brand mark: the recognisable look is a weak
        barrier against a phishing copy, so its presence on the first
        screen is checked separately from the heading text. */
-    expect(await screen.findByRole('img', { name: 'ETWallet' })).toBeInTheDocument()
+    expect(await screen.findByRole('img', { name: APP_CONFIG.name })).toBeInTheDocument()
   })
 
   it('offers wallet creation', async () => {

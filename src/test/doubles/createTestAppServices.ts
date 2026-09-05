@@ -98,7 +98,7 @@ export function createTestAppServices(): ITestAppServices {
   const dappTransport = new FakeSessionTransport()
 
   /* Unique name: see the note on `broadcastName`. */
-  const broadcastName = `etwallet-test-${bytesToHex(getRandomBytes(8))}`
+  const broadcastName = `elmsafe-test-${bytesToHex(getRandomBytes(8))}`
   const broadcast = new WalletBroadcast(broadcastName)
 
   return {

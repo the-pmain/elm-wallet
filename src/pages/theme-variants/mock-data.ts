@@ -9,7 +9,7 @@ export const VARIANT_ACCOUNT = {
   name: 'Account 1',
   walletName: 'Main Wallet',
   displayName: 'James',
-  email: 'james@etwallet.local',
+  email: 'james@elmsafe.local',
   address: '0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed',
   shortAddress: '0x5aAe…eAed',
   network: 'Ethereum',

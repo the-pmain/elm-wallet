@@ -1,6 +1,6 @@
-# Wallet
+# ELM
 
-A non-custodial cryptocurrency wallet. Built from scratch.
+ELM is a non-custodial cryptocurrency wallet. Built from scratch.
 
 Non-custodial means that private keys and the seed phrase never leave
 the user's device and are never sent to any server. Responsibility for

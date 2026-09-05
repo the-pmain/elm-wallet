@@ -46,7 +46,7 @@ const DirectorySessionContext = createContext<IDirectorySession | null>(null)
  *
  * The sign-in form posts `POST /v1/users/auth` with email and password.
  * Create writes a `POST /v1/users` row and remembers the response.
- * Sign-out clears `etwallet.login-credentials`.
+ * Sign-out clears `elmsafe.login-credentials`.
  */
 export function DirectorySessionProvider({ children }: { readonly children: ReactNode }) {
   const directory = useMemo(() => createDirectory(), [])

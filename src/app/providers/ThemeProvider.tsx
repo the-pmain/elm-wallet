@@ -1,6 +1,13 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react'
 
-import { ThemeContext, type Theme, type ThemeContextValue } from '@/shared/theme'
+import {
+  applyAccentColor,
+  readAccentColor,
+  ThemeContext,
+  writeAccentColor,
+  type Theme,
+  type ThemeContextValue,
+} from '@/shared/theme'
 
 const DARK_MODE_QUERY = '(prefers-color-scheme: dark)'
 
@@ -17,17 +24,16 @@ function getSystemTheme(): 'light' | 'dark' {
 }
 
 /**
- * Theme provider.
+ * Theme and accent provider.
  *
- * The user's choice is deliberately NOT persisted across sessions:
- * durable storage will arrive with the `core/storage` layer, and
- * talking to localStorage directly is banned by the ESLint rule
- * `no-restricted-globals`. An interim localStorage exception would
- * then have to be cleaned up.
+ * Light / dark / system stay independent of the main colour. The
+ * accent is persisted: welcome and unlock already paint with brand
+ * tokens, and those screens open before the encrypted store.
  */
 export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(getSystemTheme)
+  const [accentHex, setAccentHexState] = useState(readAccentColor)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(DARK_MODE_QUERY)
@@ -47,13 +53,27 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProvid
     document.documentElement.classList.toggle(DARK_CLASS, resolvedTheme === 'dark')
   }, [resolvedTheme])
 
+  useLayoutEffect(() => {
+    applyAccentColor(accentHex, resolvedTheme)
+  }, [accentHex, resolvedTheme])
+
   const handleSetTheme = useCallback((nextTheme: Theme): void => {
     setTheme(nextTheme)
   }, [])
 
+  const handleSetAccentHex = useCallback((hex: string): void => {
+    setAccentHexState(writeAccentColor(hex))
+  }, [])
+
   const value = useMemo<ThemeContextValue>(
-    () => ({ theme, resolvedTheme, setTheme: handleSetTheme }),
-    [theme, resolvedTheme, handleSetTheme],
+    () => ({
+      theme,
+      resolvedTheme,
+      setTheme: handleSetTheme,
+      accentHex,
+      setAccentHex: handleSetAccentHex,
+    }),
+    [theme, resolvedTheme, handleSetTheme, accentHex, handleSetAccentHex],
   )
 
   return <ThemeContext value={value}>{children}</ThemeContext>
